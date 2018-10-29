@@ -86,7 +86,7 @@ def generateInstances():
 JOB_FLOW_OVERRIDES = {
     'Name': 'PiCalc',
     'KeepJobFlowAliveWhenNoSteps': True,
-    'LogUri': "s3://xl8payments/emr/logs/",
+    'LogUri': "s3://xl8sync-assets-alpha/emr/logs/",
     'ReleaseLabel': 'emr-5.12.1',
     'Applications':[],
     'JobFlowRole': "nsync-parser-emr",
