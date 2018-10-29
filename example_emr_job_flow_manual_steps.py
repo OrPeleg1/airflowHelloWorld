@@ -53,16 +53,76 @@ SPARK_TEST_STEPS = [
     }
 ]
 
+def generateInstances():
+    return [
+        {
+            'Name': 'Master',
+            'Market': 'ON_DEMAND',
+            'InstanceRole': 'MASTER',
+            'InstanceType': 'm4.large',
+            'InstanceCount': 1,
+            'EbsConfiguration': {
+                'EbsBlockDeviceConfigs': [
+                    {
+                        'VolumeSpecification': {
+                            'VolumeType': 'gp2',
+                            'SizeInGB': 100
+                        },
+                        'VolumesPerInstance': 1
+                    },
+                ],
+                'EbsOptimized': True
+            }
+        },
+        {
+            'Name': 'Core',
+            'Market': 'ON_DEMAND',
+            'InstanceRole': 'CORE',
+            'InstanceType': 'i3.4xlarge',
+            'InstanceCount': 1
+        }
+    ]
+
 JOB_FLOW_OVERRIDES = {
     'Name': 'PiCalc',
-    'KeepJobFlowAliveWhenNoSteps': True
+    'KeepJobFlowAliveWhenNoSteps': True,
+    'LogUri': "s3://xl8payments/emr/logs/",
+    'ReleaseLabel': 'emr-5.12.1',
+    'Applications':[],
+    'JobFlowRole': "nsync-parser-emr",
+    'ServiceRole': "nsync-parser-emr",
+    'Instances': {
+        'InstanceGroups': generateInstances(),
+        'Ec2KeyName': 'bdi-alpha',
+        'KeepJobFlowAliveWhenNoSteps': True,
+        'TerminationProtected': False,
+        'Ec2SubnetId': 'subnet-e60320da',
+        'EmrManagedMasterSecurityGroup': 'sg-4d497b05',
+        'EmrManagedSlaveSecurityGroup': 'sg-4d497b05',
+        'AdditionalMasterSecurityGroups': [
+            'sg-db873aa5','sg-e8cdde9d'
+        ],
+        'AdditionalSlaveSecurityGroups': [
+            'sg-db873aa5','sg-e8cdde9d'
+        ]
+    },
+    'VisibleToAllUsers':True,
+    'Tags': [{
+        'Key': 'Environment',
+               'Value': 'Development'
+        },
+        {
+            'Key': 'Owner',
+            'Value': 'BDI'
+        }
+    ]
 }
 
 dag = DAG(
     'emr_job_flow_manual_steps_dag',
     default_args=DEFAULT_ARGS,
     dagrun_timeout=timedelta(hours=2),
-    schedule_interval='0 3 * * *'
+    schedule_interval=None
 )
 
 cluster_creator = EmrCreateJobFlowOperator(
