@@ -1,8 +1,8 @@
 1)navigate to https://github.com/puckel/docker-airflow and clone the repositiry
-2)run docker build --rm --build-arg AIRFLOW_DEPS="datadog,dask" --build-arg PYTHON_DEPS="flask_oauthlib>=0.9" -t 3)puckel/docker-airflow .
-4)run docker-compose -f docker-compose-LocalExecutor.yml up -d
-5)copy hello_world.py to your dags folder on the repositiry.
-6)navigate to http://localhost:8080/admin/ and run your dag
+2)run docker build --rm --build-arg AIRFLOW_DEPS="datadog,dask" --build-arg PYTHON_DEPS="flask_oauthlib>=0.9" -t puckel/docker-airflow .
+3)run docker-compose -f docker-compose-LocalExecutor.yml up -d
+4)copy hello_world.py to your dags folder on the repositiry.
+5)navigate to http://localhost:8080/admin/ and run your dag
 
 -----------------------------------
 1)change your dockerfile and add 
